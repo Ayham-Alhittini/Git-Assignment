@@ -21,6 +21,7 @@ public class Main {
 
             String option = scanner.nextLine();
             BrowseProduct browseProduct = new BrowseProduct();
+            double totalPrice = 0;
 
             if (option.equals("1")) {
                 ///author: developer 1
@@ -53,10 +54,10 @@ public class Main {
 
                         Product product = browseProduct.getProduct(selectedProductNumber);
 
-                        if (totalBalance >= product.getPrice() * wantedQuantity) {///could buy it
-                            totalBalance -= product.getPrice() * wantedQuantity;
+                        if (totalBalance + totalPrice >= product.getPrice() * wantedQuantity) {///could buy it
+                            totalPrice += product.getPrice() * wantedQuantity;
                             cartProducts.add(product);
-                            System.out.println("Added to your list, your balance now = " + totalBalance);
+                            System.out.println("Added to your list, your total price now = " + totalPrice);
                         } else {
                             System.out.println("Your balance can't afford it");
                         }
@@ -68,12 +69,23 @@ public class Main {
             } else if (option.equals("2")) {
                 //Author: Developer 2
 
-                double totalPrice = 0;
                 for (int i = 0; i < cartProducts.size(); i++) {
                     System.out.println((i + 1) + "- " + cartProducts.get(i).getName() + " X " + cartProducts.get(i).getQuantity());
                     totalPrice += cartProducts.get(i).getPrice();
                 }
                 System.out.println("Your total price = " + totalPrice);
+
+                //we forget to ask for confirm and clear cart
+                System.out.print("For confirm enter confirm: ");
+                String confirm = scanner.nextLine();
+
+                if (confirm.equals("confirm")) {
+                    totalBalance -= totalPrice;
+                    totalPrice = 0;
+                    cartProducts = new ArrayList<>();
+                }
+
+
             } else {
                 System.out.println("Invalid operation please choose (1-2)");
             }
