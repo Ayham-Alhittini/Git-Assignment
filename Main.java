@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -7,6 +8,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to atypon store");
+        System.out.println();
+        System.out.print("Enter your balance: ");
+
+        double totalBalance = Double.parseDouble(scanner.nextLine());
+
+        ArrayList<Product> cartProducts = new ArrayList<>();
 
         while (true) {
             System.out.println("Enter (1) for show all available products");
@@ -24,8 +31,7 @@ public class Main {
                     System.out.println("Choose one from there products and -1 to exit");
                     browseProduct.showAvailableProducts();
 
-
-                    selectedProductNumber = scanner.nextInt();
+                    selectedProductNumber = Integer.parseInt(scanner.nextLine());
 
                     if (selectedProductNumber == -1)
                         break;
@@ -41,17 +47,33 @@ public class Main {
                     System.out.println("You choose " + browseProduct.getProductInfo(selectedProductNumber));
                     System.out.print("Enter the wanted quantity: ");
 
-                    int wantedQuantity = scanner.nextInt();
+                    int wantedQuantity = Integer.parseInt(scanner.nextLine());
 
                     if (browseProduct.takeProduct(selectedProductNumber, wantedQuantity)) {
-                        System.out.println("Added to your list");
+
+                        Product product = browseProduct.getProduct(selectedProductNumber);
+
+                        if (totalBalance >= product.getPrice() * wantedQuantity) {///could buy it
+                            totalBalance -= product.getPrice() * wantedQuantity;
+                            cartProducts.add(product);
+                            System.out.println("Added to your list, your balance now = " + totalBalance);
+                        } else {
+                            System.out.println("Your balance can't afford it");
+                        }
                     } else {
                         System.out.println("No enough quantity in stock");
                     }
                 }
 
             } else if (option.equals("2")) {
-                System.out.println("checkout cart under creation");///developer 2
+                //Author: Developer 2
+
+                double totalPrice = 0;
+                for (int i = 0; i < cartProducts.size(); i++) {
+                    System.out.println((i + 1) + "- " + cartProducts.get(i).getName() + " X " + cartProducts.get(i).getQuantity());
+                    totalPrice += cartProducts.get(i).getPrice();
+                }
+                System.out.println("Your total price = " + totalPrice);
             } else {
                 System.out.println("Invalid operation please choose (1-2)");
             }
